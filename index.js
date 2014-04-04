@@ -25,44 +25,43 @@ var myexpress = function(){
       	if (out) 
       		return out(err);
       	if (err){
-      		
+      		// console.log("=============================");
       		res.statusCode = 500;
       		res.setHeader = ('Content-Type', 'text/html');
-      		res.end = ('500 - Error');
+      		res.end('500 - Error');
       	} else {
-      		
+      		// console.log("=============================");
       		res.statusCode = 404;
       		res.setHeader = ('Content-Type', 'text/html');
-      		res.end = ('404 - Not Found');
+      		res.end('404 - Not Found');
       	}
       	return;
       }
       try {
       	var arity = layer.length;
-      	console.log(index);
+      	// console.log(index);
       	if (err) {
       		if (arity == 4){
-
+      			// console.log("=============================");
       			layer(err, req, res, next);
       		} else {
-
+      			// console.log("=============================");
       			next(err);
       		}
       	} else if (arity < 4) {
-
+      		// console.log("=============================");
       		layer(req, res, next);
       	} else {
-
+      		// console.log("=============================");
       		next();
       	}
       } catch (e) {
-
+      	// console.log("=============================");
       	next (e);
       }
   	}
-
+  	// console.log("=============================");
   	next();
-  	
   }
 
   app.listen = function(port, done){
