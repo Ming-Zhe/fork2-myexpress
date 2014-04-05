@@ -159,9 +159,43 @@ describe("Implement Error Handling", function(){
 
     request(app).get("/").expect("e1").end(done);
   })
-  
 });
 
+describe("Implement App Embedding As middleware", function(){
+  var app, subapp;
+  beforeEach(function(){
+    app = express();
+    subapp = express();
+  })
+
+  it("should pass unhandled request to parent", function(done){
+    function m2(req, res, next){
+      res.end('m2');
+    }
+
+    app.use(subapp);
+    app.use(m2);
+
+    request(app).get('/').expect('m2').end(done);
+  });
+
+  it("should pass unhandled error to parent", function(done){
+    function m1(req, res, next){
+      next("m1 error");
+    }
+
+    function e1(err, req, res, next){
+      res.end(err);
+    }
+
+    subapp.use(m1);
+
+    app.use(subapp);
+    app.use(e1);
+
+    request(app).get('/').expect("m1 error").end(done);
+  });
+});
 
 
 
