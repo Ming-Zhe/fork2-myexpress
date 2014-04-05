@@ -14,15 +14,15 @@ describe("app", function(){
     });
     describe("#listen",function() {
       var port = 7001;
-	  var server;
+      var server;
 
-	  before(function(done) {
-	    server = app.listen(port,done);
-	  });
+  	  before(function(done) {
+  	    server = app.listen(port,done);
+  	  });
 
-	  it("should return an http.Server",function() {
-	    expect(server).to.be.instanceof(http.Server);
-	  });
+  	  it("should return an http.Server",function() {
+  	    expect(server).to.be.instanceof(http.Server);
+  	  });
     });
   });
 });
