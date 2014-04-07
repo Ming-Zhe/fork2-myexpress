@@ -1,4 +1,5 @@
 var http = require("http");
+var Layer = require("./lib/layer");
 
 var myexpress = function(){
   
@@ -7,8 +8,13 @@ var myexpress = function(){
   }
 
   app.stack = [];
-  app.use = function(fn){
-  	this.stack.push(fn);
+  app.use = function(route, fn){
+    if (typeof route != 'string'){
+      fn = route;
+      route = '/';
+    }
+    var layer = new Layer(route, fn);
+  	this.stack.push(layer);
   }
 
   app.handle = function(req, res, out){
@@ -34,19 +40,21 @@ var myexpress = function(){
       	return;
       }
       try {
-      	var arity = layer.length;
+        if (!layer.match(req.url))
+          return next(err);
+      	var arity = layer.handle.length;
       	// console.log(index);
       	if (err) {
       		if (arity == 4){
       			// console.log("=============================");
-      			layer(err, req, res, next);
+      			layer.handle(err, req, res, next);
       		} else {
       			// console.log("=============================");
       			next(err);
       		}
       	} else if (arity < 4) {
       		// console.log("=============================");
-      		layer(req, res, next);
+      		layer.handle(req, res, next);
       	} else {
       		// console.log("=============================");
       		next();
