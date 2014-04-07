@@ -3,10 +3,6 @@ var http = require("http");
 var myexpress = function(){
   
   var app = function(req, res, next){
-    // if(req.url == "/foo"){
-    //   res.statusCode = 404;
-    //   res.end();
-    // }
     app.handle(req, res, next);
   }
 
