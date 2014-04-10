@@ -7,6 +7,14 @@ var myexpress = function(){
     app.handle(req, res, next);
   }
 
+  var isApp = function(middleware){
+    if(typeof middleware.handle === "function"){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   app.stack = [];
   app.use = function(route, fn){
     if (typeof route != 'string'){
@@ -20,12 +28,19 @@ var myexpress = function(){
   app.handle = function(req, res, out){
   	var stack = this.stack;
   	var index = 0;
+    var superUrl = null;
 
   	function next(err){
       var layer = stack[index++];
+
       if (!layer){
-      	if (out) 
-      		return out(err);
+      	if (out) {
+          if (superUrl != null){
+            req.url = superUrl;
+            superUrl = null;
+          }
+          return out(err);
+        }
       	if (err){
       		// console.log("=============================");
       		res.statusCode = 500;
@@ -39,11 +54,20 @@ var myexpress = function(){
       	}
       	return;
       }
+      
+      
       try {
         if (!layer.match(req.url))
           return next(err);
-        else
+        else{
           req.params = layer.match(req.url).params;
+        }
+        if(isApp(layer)){
+          superUrl = req.url;
+          req.url = req.url.substr(layer.route.length);
+        }
+        console.log(req.url);
+
       	var arity = layer.handle.length;
       	// console.log(index);
       	if (err) {
