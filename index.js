@@ -42,6 +42,8 @@ var myexpress = function(){
       try {
         if (!layer.match(req.url))
           return next(err);
+        else
+          req.params = layer.match(req.url).params;
       	var arity = layer.handle.length;
       	// console.log(index);
       	if (err) {
