@@ -77,7 +77,6 @@ var myexpress = function(){
       	// console.log(index);
       	if (err) {
       		if (arity == 4){
-            // console.log("=============================");
             layer.handle(err, req, res, next);
       		} else {
       			// console.log("=============================");
