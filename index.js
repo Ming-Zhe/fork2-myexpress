@@ -1,5 +1,7 @@
 var http = require("http");
 var Layer = require("./lib/layer");
+var makeRoute = require("./lib/route");
+var methods = require("methods");
 
 var myexpress = function(){
   
@@ -24,6 +26,9 @@ var myexpress = function(){
     var layer = new Layer(route, fn);
   	this.stack.push(layer);
   }
+  // app.get = function(route, fn){
+
+  // }
 
   app.handle = function(req, res, out){
   	var stack = this.stack;
@@ -72,8 +77,8 @@ var myexpress = function(){
       	// console.log(index);
       	if (err) {
       		if (arity == 4){
-      			// console.log("=============================");
-      			layer.handle(err, req, res, next);
+            // console.log("=============================");
+            layer.handle(err, req, res, next);
       		} else {
       			// console.log("=============================");
       			next(err);
@@ -94,9 +99,19 @@ var myexpress = function(){
   	next();
   }
 
+  methods.forEach(function(method){
+    // app[method] = function() { ... }
+    app[method] = function(path, fn){
+      var handler = makeRoute(method, fn);
+      app.use(path, handler, true);
+    }
+  });
+
   app.listen = function(port, done){
     return http.createServer(app).listen(port, done);
   }
+
+
   return app;
 }
 
