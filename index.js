@@ -47,17 +47,15 @@ var myexpress = function(){
           return out(err);
         }
       	if (err){
-      		// console.log("=============================");
-      		res.statusCode = 500;
-      		res.setHeader = ('Content-Type', 'text/html');
-      		res.end('500 - Error');
-      	} else {
-      		// console.log("=============================");
-      		res.statusCode = 404;
-      		res.setHeader = ('Content-Type', 'text/html');
-      		res.end('404 - Not Found');
-      	}
-      	return;
+          res.statusCode = 500;
+          res.setHeader = ('Content-Type', 'text/html');
+          res.end('500 - Error');
+        } else {
+          res.statusCode = 404;
+          res.setHeader = ('Content-Type', 'text/html');
+          res.end('404 - Not Found');
+        }
+        return;
       }
       
       
@@ -78,28 +76,22 @@ var myexpress = function(){
       	if (err) {
           if (arity == 4){
             layer.handle(err, req, res, next);
-      		} else {
-      			// console.log("=============================");
-      			next(err);
-      		}
-      	} else if (arity < 4) {
-      		// console.log("=============================");
-      		layer.handle(req, res, next);
-      	} else {
-      		// console.log("=============================");
-      		next();
-      	}
+          } else {
+            next(err);
+          }
+        } else if (arity < 4) {
+          layer.handle(req, res, next);
+        } else {
+          next();
+        }
       } catch (e) {
-      	// console.log("=============================");
-      	next (e);
+        next (e);
       }
-  	}
-  	// console.log("=============================");
-  	next();
+    }
+    next();
   }
 
   methods.forEach(function(method){
-    // app[method] = function() { ... }
     app[method] = function(path, fn){
       var handler = makeRoute(method, fn);
       app.use(path, handler, true);
