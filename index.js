@@ -32,13 +32,13 @@ var myexpress = function(){
 
   	function next(err){
       var layer = stack[index++];
-
-      if (!layer){
-      	if (out) {
-          if (superUrl != null){
+      if (superUrl != null){
             req.url = superUrl;
             superUrl = null;
           }
+
+      if (!layer){
+      	if (out) {
           return out(err);
         }
       	if (err){
@@ -62,11 +62,11 @@ var myexpress = function(){
         else{
           req.params = layer.match(req.url).params;
         }
-        if(isApp(layer)){
+        if(layer.handle.handle){
           superUrl = req.url;
           req.url = req.url.substr(layer.route.length);
         }
-        console.log(req.url);
+        // console.log(req.url);
 
       	var arity = layer.handle.length;
       	// console.log(index);
