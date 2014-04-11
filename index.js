@@ -62,7 +62,7 @@ var myexpress = function(){
         else{
           req.params = layer.match(req.url).params;
         }
-        if(layer.handle.handle){
+        if(isApp(layer.handle)){
           superUrl = req.url;
           req.url = req.url.substr(layer.route.length);
         }
