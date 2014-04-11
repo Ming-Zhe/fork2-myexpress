@@ -24,18 +24,18 @@ var myexpress = function(){
       route = '/';
     }
     var layer = new Layer(route, fn);
-  	this.stack.push(layer);
+    this.stack.push(layer);
   }
   // app.get = function(route, fn){
 
   // }
 
   app.handle = function(req, res, out){
-  	var stack = this.stack;
-  	var index = 0;
+    var stack = this.stack;
+    var index = 0;
     var superUrl = null;
 
-  	function next(err){
+    function next(err){
       var layer = stack[index++];
       if (superUrl != null){
             req.url = superUrl;
@@ -43,10 +43,10 @@ var myexpress = function(){
           }
 
       if (!layer){
-      	if (out) {
+        if (out) {
           return out(err);
         }
-      	if (err){
+        if (err){
           res.statusCode = 500;
           res.setHeader = ('Content-Type', 'text/html');
           res.end('500 - Error');
