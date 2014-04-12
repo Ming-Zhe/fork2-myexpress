@@ -17,18 +17,23 @@ var myexpress = function(){
     }
   }
 
+  methods.forEach(function(method){
+    app[method] = function(path, fn){
+      handler = makeRoute(method, fn);
+      // console.log("++++++++++++++++++++++");
+      app.use(path, handler, true);
+    }
+  });
+
   app.stack = [];
-  app.use = function(route, fn){
+  app.use = function(route, fn, isStrict){
     if (typeof route != 'string'){
       fn = route;
       route = '/';
     }
-    var layer = new Layer(route, fn);
+    var layer = new Layer(route, fn, isStrict ? isStrict : false);
     this.stack.push(layer);
   }
-  // app.get = function(route, fn){
-
-  // }
 
   app.handle = function(req, res, out){
     var stack = this.stack;
@@ -38,9 +43,9 @@ var myexpress = function(){
     function next(err){
       var layer = stack[index++];
       if (superUrl != null){
-            req.url = superUrl;
-            superUrl = null;
-          }
+        req.url = superUrl;
+        superUrl = null;
+      }
 
       if (!layer){
         if (out) {
@@ -60,7 +65,7 @@ var myexpress = function(){
       
       
       try {
-        if (!layer.match(req.url))
+        if (!layer.match(req.url.toLowerCase()))
           return next(err);
         else{
           req.params = layer.match(req.url).params;
@@ -90,13 +95,6 @@ var myexpress = function(){
     }
     next();
   }
-
-  methods.forEach(function(method){
-    app[method] = function(path, fn){
-      var handler = makeRoute(method, fn);
-      app.use(path, handler, true);
-    }
-  });
 
   app.listen = function(port, done){
     return http.createServer(app).listen(port, done);
